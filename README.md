@@ -2,8 +2,8 @@
 
 An interactive 3D model of the **Unitree G1** humanoid robot (29-DOF, URDF `g1_29dof_mode_15`) for teaching. It runs in any modern browser, on desktop or phone, and the downloaded file works fully offline.
 
-**▶ Open online:** https://__USER__.github.io/unitree-g1-anatomy-explorer/
-**⬇ Download (offline, one file):** [Unitree_G1_Anatomy_Explorer.zip](https://github.com/__USER__/unitree-g1-anatomy-explorer/releases/latest/download/Unitree_G1_Anatomy_Explorer.zip)
+**▶ Open online:** https://haseeb-engr.github.io/unitree-g1-anatomy-explorer/
+**⬇ Download (offline, one file):** [Unitree_G1_Anatomy_Explorer.zip](https://github.com/haseeb-engr/unitree-g1-anatomy-explorer/releases/latest/download/Unitree_G1_Anatomy_Explorer.zip)
 
 | Real | 3D | Skeleton | Blueprint |
 |---|---|---|---|
