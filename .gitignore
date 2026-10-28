@@ -1,0 +1,17 @@
+# Unitree download (fetched by build/pack_g1.py's instructions) and generated files
+source/
+build/out/
+dist/artifact/
+dist/video/
+*.zip
+__pycache__/
+
+# private notes and research material, not published
+Unitree_G1_Claude_Code_Project_Brief/
+Unitree_G1_3D_Structure_Reference.md
+Unitree_G1_29DOF_Mode15_Joint_Coordinates.csv
+Unitree_G1_Blender_Skeleton_Starter.py
+
+# user files, not published unless decided
+info.png
+unitree_G1_Anatomy.mp4

@@ -1,0 +1,60 @@
+<div id="app">
+  <canvas id="stage" aria-label="3D model of the Unitree G1 humanoid robot"></canvas>
+  <div id="labels"></div>
+
+  <header id="top">
+    <div class="brand panel"><b>Unitree G1</b><span>Anatomy Explorer · 29-DOF mode 15</span></div>
+    <nav id="modes" class="panel" aria-label="View mode">
+      <button data-mode="real" aria-pressed="true"><kbd>1</kbd>Real</button>
+      <button data-mode="solid" aria-pressed="false"><kbd>2</kbd>3D</button>
+      <button data-mode="skeleton" aria-pressed="false"><kbd>3</kbd>Skeleton</button>
+      <button data-mode="blueprint" aria-pressed="false"><kbd>4</kbd>Blueprint</button>
+    </nav>
+    <div class="tools">
+      <button class="tool" id="t-pose" aria-pressed="false">Pose (P)</button>
+      <button class="tool" id="t-labels" aria-pressed="false">Labels (L)</button>
+      <button class="tool" id="t-spin" aria-pressed="false">Turntable (T)</button>
+      <button class="tool" id="t-full">Full screen (F)</button>
+      <button class="tool" id="t-about">About</button>
+    </div>
+  </header>
+
+  <div id="views" class="panel" aria-label="Camera">
+    <button data-view="persp">3/4 view</button>
+    <button data-view="front">Front</button>
+    <button data-view="side">Side</button>
+    <button data-view="back">Back</button>
+    <button data-view="top">Top</button>
+    <hr>
+    <button id="v-ortho" aria-pressed="false">Ortho</button>
+  </div>
+
+  <aside id="pose" class="panel" hidden>
+    <h2>Pose the robot</h2>
+    <div class="presets" id="presets"></div>
+    <div id="jointGroups"></div>
+  </aside>
+
+  <aside id="inspector" class="panel" aria-live="polite"></aside>
+
+  <div id="legend" class="panel"></div>
+  <div id="credit">Powered by <b>Fraunhofer IOSB-INA</b><br>Developed by <span class="em">muhammad.haseeb@iosb-ina.fraunhofer.de</span></div>
+  <div id="hint">Drag to rotate · scroll to zoom · right-drag to pan · click any part</div>
+  <div id="titleblock" hidden>
+    <div class="tb-name">UNITREE G1 · 29-DOF MODE 15</div>
+    <div>UNITS mm</div><div>ORIGIN pelvis</div>
+    <div>SCALE n.t.s.</div><div>POSE as shown</div>
+    <div>SOURCE unitree_ros URDF</div><div>MASS 33.74 kg (URDF)</div>
+    <div class="tb-by">DRAWN BY muhammad.haseeb@iosb-ina.fraunhofer.de</div>
+    <div class="tb-by">Fraunhofer IOSB-INA</div>
+    <div class="tb-warn">Teaching drawing, not a manufacturing drawing</div>
+  </div>
+  <div id="tip" hidden></div>
+  <div id="busy" class="panel" hidden>Preparing line drawing…</div>
+
+  <div id="about" hidden role="dialog" aria-modal="true" aria-labelledby="about-h">
+    <div class="panel" id="aboutBody"></div>
+  </div>
+
+  <div id="loading"><div class="box"><b>Unitree G1 Anatomy Explorer</b><span id="loadmsg">Unpacking 34 official meshes…</span><div class="credit">Powered by Fraunhofer IOSB-INA<br>Developed by muhammad.haseeb@iosb-ina.fraunhofer.de</div></div></div>
+</div>
