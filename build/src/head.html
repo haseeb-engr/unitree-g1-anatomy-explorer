@@ -164,20 +164,65 @@ body.bp .lbl:not(.dim) { background: var(--bp); color: var(--bp-line); border: 1
 body.has-pose #legend { left: calc(max(16px, env(safe-area-inset-left, 0px)) + min(300px, calc(100% - 32px)) + 10px); }
 body.bp #hint { display: none; }
 @media (max-width: 1100px) { #hint { display: none; } }
-@media (max-width: 760px) {
-  .brand span { display: none; }
-  #modes button { padding: 8px 9px; font-size: 14px; }
-  #modes button kbd { display: none; }
-  #views { top: auto; bottom: calc(60px + env(safe-area-inset-bottom, 0px)); flex-direction: row; flex-wrap: wrap; max-width: calc(100% - 32px); }
+.narrow, .lg-credit { display: none; }
+details.lg-more summary { cursor: pointer; margin-top: 10px; font: 500 11px/1 var(--mono); color: var(--muted); list-style: none; display: flex; align-items: center; gap: 6px; }
+details.lg-more summary::-webkit-details-marker { display: none; }
+details.lg-more summary::after { content: "\25BE"; font-size: 10px; transition: transform 0.15s; }
+details.lg-more[open] summary::after { transform: rotate(180deg); }
+.lg-credit { margin-top: 8px; font: 400 10px/1.45 var(--mono); color: var(--muted); }
+.lg-credit b { color: var(--fg); font-weight: 500; }
+
+/* short landscape screens (phones turned sideways) */
+@media (max-height: 520px) and (min-width: 761px) {
+  #top { top: 6px; flex-wrap: nowrap; }
+  .brand { padding: 6px 10px; }
+  .brand b { font-size: 17px; }
+  .brand span, .tool .k, .wide, #t-full, #modes button kbd { display: none; }
+  .narrow { display: inline; }
+  #modes button { padding: 9px 10px; font-size: 14px; }
+  .tool { padding: 10px 11px; }
+  #views { top: auto; bottom: 8px; flex-direction: row; padding: 4px; gap: 2px; }
+  #views button { padding: 10px 9px; }
   #views hr { display: none; }
-  body.has-inspector #views { display: none; }
-  #inspector { top: auto; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); max-height: 52%; }
-  #pose { top: auto; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); max-height: 60%; }
-  #hint, #titleblock { display: none; }
-  #credit { font-size: 9.5px; max-width: calc(100% - 32px); }
-  body.has-inspector #credit, body.has-pose #credit { display: none; }
-  #legend { bottom: calc(110px + env(safe-area-inset-bottom, 0px)); }
-  body.has-inspector #legend, body.has-pose #legend { display: none; }
+  #inspector, #pose { top: 58px; max-height: calc(100% - 66px); }
+  #legend { bottom: 8px; padding: 8px 10px; max-width: min(360px, calc(100% - 420px)); }
+  body.has-inspector #views, body.has-pose #legend { display: none; }
+  #hint, #credit, #titleblock { display: none; }
+  .lg-credit { display: block; }
+}
+
+/* phones, portrait */
+@media (max-width: 760px) {
+  .wide, .tool .k, #t-full { display: none; }
+  .narrow { display: inline; }
+  #top { top: 8px; gap: 6px; }
+  .brand { padding: 7px 10px; }
+  .brand b { font-size: 17px; }
+  .brand span { display: none; }
+  .tools { order: 2; gap: 4px; }
+  .tool { padding: 10px 11px; font-size: 12px; }
+  #modes { order: 3; width: 100%; }
+  #modes button { flex: 1; justify-content: center; padding: 11px 2px; font-size: 14px; }
+  #modes button kbd { display: none; }
+  #views { top: auto; left: max(16px, env(safe-area-inset-left, 0px)); right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(10px + env(safe-area-inset-bottom, 0px)); flex-direction: row; gap: 2px; padding: 4px; }
+  #views button { flex: 1; text-align: center; padding: 11px 2px; font-size: 11.5px; }
+  #views hr { display: none; }
+  #legend { left: max(16px, env(safe-area-inset-left, 0px)); right: max(16px, env(safe-area-inset-right, 0px)); max-width: none; bottom: calc(64px + env(safe-area-inset-bottom, 0px)); padding: 9px 12px 10px; }
+  #legend .lg-title { margin-bottom: 6px; }
+  .layers label { padding: 9px 10px; font-size: 12px; }
+  .layers input { width: 16px; height: 16px; }
+  .explode input { height: 30px; }
+  #inspector, #pose { top: auto; width: auto; left: max(16px, env(safe-area-inset-left, 0px)); right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(10px + env(safe-area-inset-bottom, 0px)); max-height: 56%; }
+  .close { width: 38px; height: 38px; }
+  .btn { padding: 10px 13px; }
+  .jrow { grid-template-columns: 96px 1fr 44px; margin-top: 4px; }
+  .jrow button { padding: 8px 0; }
+  .jrow input { height: 30px; }
+  .linklike { padding: 6px 0; display: inline-block; }
+  .ctrl input[type=range] { height: 30px; }
+  body.has-inspector #views, body.has-pose #views, body.has-inspector #legend, body.has-pose #legend { display: none; }
+  #hint, #titleblock, #credit { display: none; }
+  .lg-credit { display: block; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>

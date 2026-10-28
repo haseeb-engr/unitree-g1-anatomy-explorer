@@ -640,30 +640,39 @@
     renderer.setSize(w, h, false);
     persp.aspect = w / h; persp.updateProjectionMatrix();
     (O.paths || []).forEach((l) => l.material.resolution.set(w, h));
-    const hh = 0.88, a = w / h;
+    const hh = fit().hh, a = w / h;
+    // phone rotated or window resized into another size class: reframe the robot
+    const cls = JSON.stringify(fit());
+    if (state.fitCls && state.fitCls !== cls && RJ.length) goView(state.view || 'persp');
+    state.fitCls = cls;
     Object.assign(ortho, { left: -hh * a, right: hh * a, top: hh, bottom: -hh }); ortho.updateProjectionMatrix();
   }
   function setOrtho(on, auto = true) {
     state.ortho = on; state.autoOrtho = auto;
     const from = camera, to = on ? ortho : persp;
     const dir = from.position.clone().sub(controls.target).normalize();
-    to.position.copy(controls.target).addScaledVector(dir, on ? 5 : 2.6);
+    controls.target.y = fit().ty;
+    to.position.copy(controls.target).addScaledVector(dir, on ? 5 : 2.6 * fit().k);
     to.up.set(0, 1, 0); to.lookAt(controls.target);
     if (on) { ortho.zoom = 1; ortho.updateProjectionMatrix(); }
     camera = to; controls.object = to; controls.update();
     $('#v-ortho').setAttribute('aria-pressed', String(on));
   }
   const VIEWS = { persp: [2.0, 1.05, 1.6], front: [1, 0, 0], side: [0, 0, -1], back: [-1, 0, 0], top: [0, 1, 0.0001] };
+  const compact = () => window.innerWidth <= 760 || window.innerHeight <= 520;
+  // phones: panels cover the top and bottom of the screen, so pull the camera back and aim a bit lower
+  const fit = () => (window.innerWidth <= 760 && window.innerHeight > window.innerWidth ? { k: 1.5, ty: 0.57, hh: 1.14 } : window.innerHeight <= 520 ? { k: 1.25, ty: 0.64, hh: 1.0 } : { k: 1, ty: 0.68, hh: 0.88 });
   function goView(name) {
-    const tgt = new T.Vector3(0, 0.68, 0);
+    const F = fit(), tgt = new T.Vector3(0, F.ty, 0);
     let end;
-    if (name === 'persp') end = new T.Vector3(...VIEWS.persp);
-    else end = new T.Vector3(...VIEWS[name]).normalize().multiplyScalar(camera.isOrthographicCamera ? 5 : 2.9).add(tgt);
-    if (name === 'top') end.y = tgt.y + (camera.isOrthographicCamera ? 5 : 2.9);
+    if (name === 'persp') end = new T.Vector3(VIEWS.persp[0] * F.k, 0.68 + (VIEWS.persp[1] - 0.68) * F.k, VIEWS.persp[2] * F.k).add(new T.Vector3(0, F.ty - 0.68, 0));
+    else end = new T.Vector3(...VIEWS[name]).normalize().multiplyScalar(camera.isOrthographicCamera ? 5 : 2.9 * F.k).add(tgt);
+    if (name === 'top') end.y = tgt.y + (camera.isOrthographicCamera ? 5 : 2.9 * F.k);
     const start = camera.position.clone(), st = controls.target.clone();
     const z0 = camera.zoom || 1;
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     camTween = { t0: performance.now(), dur: reduce ? 1 : 650, start, end, st, tgt, z0 };
+    state.view = name;
     document.querySelectorAll('#views [data-view]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.view === name)));
   }
   function stepCam(now) {
@@ -992,8 +1001,16 @@
     else h = `<div class="lg-title">Blueprint · internals</div><div class="sw">${wire('power')}${wire('bus')}${wire('eth')}${wire('data')}<span><i style="background:#1d6b48;border:1px solid #8ff0c0"></i>Circuit board</span><span><i style="background:#e8a15a"></i>Motor windings</span></div>
       <div class="src" style="margin-top:6px">Solid line: documented connection. Dashed: inferred. All routes and layouts are illustrative.</div>
       <div class="layers">${tog('outline', 'Outline')}${tog('modules', 'Actuators')}${tog('boards', 'Circuits')}${tog('power', 'Power')}${tog('bus', 'Motor bus')}${tog('data', 'Network + sensors')}${tog('linkage', 'Ankle linkage')}${tog('dims', 'Dimensions')}${tog('skeleton', 'Skeleton')}</div>`;
-    h += `<div class="explode"><label for="explode">Explode</label><input type="range" id="explode" min="0" max="1" step="0.01" value="${explode}"><output>${Math.round(explode * 100)}%</output></div>`;
+    const explodeRow = `<div class="explode"><label for="explode">Explode</label><input type="range" id="explode" min="0" max="1" step="0.01" value="${explode}"><output>${Math.round(explode * 100)}%</output></div>`;
+    // on small screens the layer switches and explode slider fold away under one summary line
+    const m = h.match(/<div class="layers">[\s\S]*$/);
+    const opts = (m ? m[0] : '') + explodeRow;
+    if (m) h = h.slice(0, m.index);
+    const open = state.legendOpen ?? !compact();
+    h += `<details class="lg-more"${open ? ' open' : ''}><summary>${m ? 'Layers and explode' : 'Explode'}</summary>${opts}</details>`;
+    h += '<div class="lg-credit">Powered by <b>Fraunhofer IOSB-INA</b><br>Developed by muhammad.haseeb@iosb-ina.fraunhofer.de</div>';
     lg.innerHTML = h;
+    $('details.lg-more', lg).addEventListener('toggle', (e) => { state.legendOpen = e.target.open; });
     const ex = $('#explode', lg);
     ex.addEventListener('input', () => { setExplode(+ex.value); ex.nextElementSibling.textContent = Math.round(explode * 100) + '%'; });
     lg.querySelectorAll('[data-layer]').forEach((c) => c.addEventListener('change', () => { L[c.dataset.layer] = c.checked; refreshMaterials(); }));
@@ -1193,7 +1210,8 @@
       RJ.forEach((J) => setQ(J, sym(STAND)[J.name] || 0));
       ground(); syncSliders();
       document.querySelectorAll('#presets .btn')[1].classList.add('primary');
-      if (window.innerWidth < 760) state.introClosed = true;
+      if (compact()) { state.introClosed = true; closeInspector(); }
+      { const F = fit(); controls.target.set(0, F.ty, 0); persp.position.set(VIEWS.persp[0] * F.k, F.ty + (VIEWS.persp[1] - 0.68) * F.k, VIEWS.persp[2] * F.k); controls.update(); }
       const HASH = { real: 'real', '3d': 'solid', skeleton: 'skeleton', blueprint: 'blueprint' };
       const fromHash = () => HASH[location.hash.slice(1).toLowerCase()];
       await setMode(fromHash() || 'real');
