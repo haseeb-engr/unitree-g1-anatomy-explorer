@@ -15,3 +15,5 @@ Unitree_G1_Blender_Skeleton_Starter.py
 # user files, not published unless decided
 info.png
 unitree_G1_Anatomy.mp4
+.claude/
+*.mp4
