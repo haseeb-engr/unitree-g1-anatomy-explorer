@@ -60,3 +60,6 @@ Requirements: Python 3 with NumPy, Node 20+, Google Chrome (for the test).
 Powered by **Fraunhofer IOSB-INA**. Developed by **muhammad.haseeb@iosb-ina.fraunhofer.de**.
 Built with Three.js, with the help of Claude Code (Anthropic).
 Robot geometry © Unitree Robotics (BSD-3-Clause). See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+
+## Licence
+The code in this repository is released under the [MIT License](LICENSE). The embedded Unitree robot meshes and URDF data stay under Unitree's BSD-3-Clause licence, and three.js and the fonts keep their own licences. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
